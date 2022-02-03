@@ -1,10 +1,10 @@
 import React from 'react';
 
 // Chakra UI
-import { Flex, Text, Image } from '@chakra-ui/react';
+import { Flex, Text, Image, Tooltip } from '@chakra-ui/react';
 import UserActions from './UserActions';
 
-const User = ({user, deleteUserHandler, isActiveHandler }) => {
+const User = ({user, deleteUserHandler, isActiveHandler, setRightSlideIsOpen, setUserSelected }) => {
   return (
     <Flex
       alignItems="center"
@@ -18,26 +18,37 @@ const User = ({user, deleteUserHandler, isActiveHandler }) => {
         alignItems="center"
         gap={3}
       >
-
-        <Image
-          borderRadius="9999px"
-          border="2px solid transparent"
-          borderColor={(user.isActive) ? 'green.400' : 'red.400'}
-          fallbackSrc='https://via.placeholder.com/150'
-          height={10}
-          src={user.image}
-          width={10}
-        />
+        <Tooltip
+          bg={(user.isActive) ? 'green.400' : 'red.400'}
+          label={(user.isActive) ? 'Activo' : 'Desactivado'}
+        >
+          <Image
+            borderRadius="9999px"
+            border="2px solid transparent"
+            borderColor={(user.isActive) ? 'green.400' : 'red.400'}
+            fallbackSrc='https://via.placeholder.com/150'
+            height={10}
+            src={user.avatar}
+            width={10}
+          />
+        </Tooltip>
         <Flex
           flexDirection="column"
         >
           <Flex
             color="gray.700"
             fontWeight="bold"            
-            gap={2}
           >
-            <Text>{user.name}</Text>
-            <Text>{user.lastname}</Text>
+            <Text
+              as="a"
+              _hover={{ cursor: 'pointer', color: 'gray.900'  }}
+              onClick={() => {
+                setUserSelected(user);
+                setRightSlideIsOpen(true);
+              }}
+            >
+              {`${user.first_name} ${user.last_name}`}
+            </Text>
           </Flex>
           <Text>{user.email}</Text>
         </Flex>

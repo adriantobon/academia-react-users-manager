@@ -52,11 +52,11 @@ const AddUserModal = ({modalIsOpen, setModalIsOpen, addUserHandler}) => {
 
     const newUser = {
       id: crypto.randomUUID(),
-      name,
-      lastname,
+      first_name: name,
+      last_name: lastname,
       isActive,
       email,
-      image,
+      avatar: image,
     }
 
     console.log(newUser)

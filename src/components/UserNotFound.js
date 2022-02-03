@@ -3,7 +3,7 @@ import React from 'react';
 // Chakra UI
 import { Flex, Heading } from '@chakra-ui/react';
 
-const UserNotFound = () => {
+const UserNotFound = ({usersIsLoading}) => {
   return (
     <Flex
       alignItems="center"
@@ -15,7 +15,11 @@ const UserNotFound = () => {
         as="h2"
         fontSize="xl"
       >
-        No hay usuarios
+        {
+          usersIsLoading
+          ? 'Cargando...'
+          : 'No hay usuarios'
+        }
       </Heading>
     </Flex>
   )

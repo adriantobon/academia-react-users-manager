@@ -1,42 +1,55 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import AddUserModal from './components/AddUserModal';
 import Header from './components/Header';
 import UsersList from './components/UsersList';
 
 // Chakra UI
 import { useToast } from '@chakra-ui/react';
+import UserDetailsRightSlide from './components/UserDetailsRightSlide';
 
 const App = () => {
 
-  const usersInit = [
-    {
-      id: crypto.randomUUID(),
-      name: 'User 1',
-      lastname: 'Lastname 1',
-      email: 'test@test.com',
-      image: '',
-      isActive: true,
-    },
-    {
-      id: crypto.randomUUID(),
-      name: 'User 2',
-      lastname: 'Lastname 2',
-      email: 'test1@test.com',
-      image: '',
-      isActive: true,
-    },
-    {
-      id: crypto.randomUUID(),
-      name: 'User 3',
-      lastname: 'Lastname 3',
-      email: 'test2@test.com',
-      image: '',
-      isActive: false,
-    },
-  ]
-  const [users, setUsers] = useState(usersInit);
+  const [users, setUsers] = useState([]);
+  const [userSelected, setUserSelected] = useState(null);
+  const [totalPages, setTotalPages] = useState(0);
+  const [totalResults, setTotalResults] = useState(0);
+  const [page, setPage] = useState(1);
+  const [usersIsLoading, setUsersIsLoading] = useState(true);
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [rightSlideIsOpen, setRightSlideIsOpen] = useState(false);
   const toast = useToast();
+
+  useEffect(() => {
+
+    const getUsers = async () => {
+      try {
+        setUsersIsLoading(true);
+        const fetchResponse = await fetch(`https://reqres.in/api/users?page=${page}`);
+        const { data: usersResponse, total_pages, total } = await fetchResponse.json();
+
+        const usersList = usersResponse.map((user) => (
+          {
+            ...user,
+            isActive: false,
+          }
+        ));
+
+        // Agregando Timeout para ver el mensaje 'cargando'
+        setTimeout(() => {
+          setUsers(usersList);
+          setTotalPages(total_pages);
+          setTotalResults(total);
+          setUsersIsLoading(false);
+        }, 1000)
+      } catch (err) {
+        console.log('error catch', err);
+      }
+    };
+
+    getUsers();
+
+
+  }, [page]);
 
   const deleteUserHandler = (userId) => {
 
@@ -52,7 +65,8 @@ const App = () => {
       title: 'Usuario Eliminado',
       status: 'error',
       duration: 3000,
-    })
+    });
+    setTotalResults((prev) => prev - 1);
   }
 
   const isActiveHandler = (userId) => {
@@ -75,20 +89,23 @@ const App = () => {
       const usersUpdated = [...prevState, user];
       toast({
         title: 'Usuario creado.',
-        description: `El usuario ${user.name} esta ${user.isActive ? 'activo' : 'inactivo'}.`,
+        description: `El usuario ${user.first_name} esta ${user.isActive ? 'activo' : 'inactivo'}.`,
         status: 'success',
         duration: 3000,
         isClosable: true,
       })
       return usersUpdated;
-    })
+    });
+
+    setTotalResults((prev) => prev + 1);
   }
 
   return (
     <>
       <Header usersLength={users.length} setModalIsOpen={setModalIsOpen} />
-      <UsersList users={users} deleteUserHandler={deleteUserHandler} isActiveHandler={isActiveHandler} />
+      <UsersList users={users} deleteUserHandler={deleteUserHandler} isActiveHandler={isActiveHandler} usersIsLoading={usersIsLoading} totalPages={totalPages} page={page} setPage={setPage} totalResults={totalResults} setRightSlideIsOpen={setRightSlideIsOpen} setUserSelected={setUserSelected} />
       <AddUserModal modalIsOpen={modalIsOpen} setModalIsOpen={setModalIsOpen} addUserHandler={addUserHandler} />
+      { userSelected && <UserDetailsRightSlide rightSlideIsOpen={rightSlideIsOpen} setRightSlideIsOpen={setRightSlideIsOpen} userSelected={userSelected} deleteUserHandler={deleteUserHandler} isActiveHandler={isActiveHandler} />}
     </>
   )
 
