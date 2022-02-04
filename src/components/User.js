@@ -1,10 +1,14 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { usersContext } from '../context/usersContext';
 
 // Chakra UI
 import { Flex, Text, Image, Tooltip } from '@chakra-ui/react';
 import UserActions from './UserActions';
 
-const User = ({user, deleteUserHandler, isActiveHandler, setRightSlideIsOpen, setUserSelected }) => {
+const User = ({user, setRightSlideIsOpen }) => {
+  
+  const { setUserSelected, deleteUserHandler, isActiveHandler } = useContext(usersContext);
+  
   return (
     <Flex
       alignItems="center"

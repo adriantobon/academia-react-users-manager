@@ -80,6 +80,7 @@ export const useUsers = () => {
   }
 
   const addUserHandler = (user) => {
+    console.log('entra add');
     setUsers((prevState) => {
       const usersUpdated = [...prevState, user];
       toast({
