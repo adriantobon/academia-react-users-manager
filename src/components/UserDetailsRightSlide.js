@@ -1,13 +1,15 @@
 import React, { useState, useContext } from 'react';
 import { usersContext } from '../context/usersContext';
+import { dialogsContext } from '../context/dialogsContext';
 
 // Chakra UI
 import { Drawer, DrawerBody, DrawerCloseButton, DrawerContent, DrawerHeader, DrawerOverlay, Flex, Text, Image, Box, Button, Tooltip, Input } from '@chakra-ui/react';
 import { DeleteIcon, CheckIcon, CloseIcon, EditIcon } from '@chakra-ui/icons';
 
-const UserDetailsRightSlide = ({rightSlideIsOpen, setRightSlideIsOpen}) => {
+const UserDetailsRightSlide = () => {
 
   const { userSelected, deleteUserHandler, isActiveHandler, editUserHandler } = useContext(usersContext);
+  const { rightSlideIsOpen, setRightSlideIsOpen } = useContext(dialogsContext);
   
   const [isEditMode, setIsEditMode] = useState(false);
   const [firstname, setFirstname] = useState('');

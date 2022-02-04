@@ -6,7 +6,7 @@ import User from './User';
 import UserNotFound from './UserNotFound';
 import Pagination from './Pagination';
 
-const UsersList = ({setRightSlideIsOpen}) => {
+const UsersList = () => {
   
   const { users, loading } = useContext(usersContext);
   
@@ -15,7 +15,7 @@ const UsersList = ({setRightSlideIsOpen}) => {
       {
         (users.length > 0 && !loading)
         ? users.map((user) => (
-          <User key={user.id} user={user} setRightSlideIsOpen={setRightSlideIsOpen} />
+          <User key={user.id} user={user} />
         ))
         : <UserNotFound usersIsLoading={loading} />
       }

@@ -1,13 +1,15 @@
 import React, { useContext } from 'react';
 import { usersContext } from '../context/usersContext';
+import { dialogsContext } from '../context/dialogsContext';
 
 // Chakra UI
 import { Flex, Text, Image, Tooltip } from '@chakra-ui/react';
 import UserActions from './UserActions';
 
-const User = ({user, setRightSlideIsOpen }) => {
+const User = ({user}) => {
   
   const { setUserSelected, deleteUserHandler, isActiveHandler } = useContext(usersContext);
+  const { setRightSlideIsOpen } = useContext(dialogsContext);
   
   return (
     <Flex

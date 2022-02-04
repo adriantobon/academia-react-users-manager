@@ -3,12 +3,13 @@ import React, { useState, useContext } from 'react';
 // Chakra UI
 import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, FormControl, FormLabel, Input, FormHelperText, Checkbox, Button, useToast } from '@chakra-ui/react';
 import { usersContext } from '../context/usersContext';
+import { dialogsContext } from '../context/dialogsContext';
 
-const AddUserModal = ({modalIsOpen, setModalIsOpen}) => {
+const AddUserModal = () => {
 
-  
   const toast = useToast();
   const { addUserHandler } = useContext(usersContext);
+  const { modalIsOpen, setModalIsOpen } = useContext(dialogsContext);
 
   /* Estados independientes para el formulario */
 

@@ -8,12 +8,15 @@ import { ChakraProvider } from '@chakra-ui/react';
 
 // Context
 import { UsersContextProvider } from './context/usersContext';
+import { DialogsContextProvider } from './context/dialogsContext';
 
 ReactDOM.render(
   <React.StrictMode>
     <ChakraProvider>
       <UsersContextProvider>
-        <App />
+        <DialogsContextProvider>
+          <App />
+        </DialogsContextProvider>
       </UsersContextProvider>
     </ChakraProvider>
   </React.StrictMode>,

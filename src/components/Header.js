@@ -1,12 +1,15 @@
 import React, { useContext } from 'react';
 import { usersContext } from '../context/usersContext';
+import { dialogsContext } from '../context/dialogsContext';
+
 
 // Chakra UI
 import { Button, Flex, Heading } from '@chakra-ui/react'
 
-const Header = ({setModalIsOpen}) => {
+const Header = () => {
   
   const { users } = useContext(usersContext);
+  const { setModalIsOpen } = useContext(dialogsContext);
 
   return (
     <Flex
