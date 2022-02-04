@@ -1,26 +1,45 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 // Chakra UI
-import { Drawer, DrawerBody, DrawerCloseButton, DrawerContent, DrawerHeader, DrawerOverlay, Flex, Text, Image, Box, Button, Tooltip } from '@chakra-ui/react';
-import { DeleteIcon, CheckIcon, CloseIcon } from '@chakra-ui/icons';
+import { Drawer, DrawerBody, DrawerCloseButton, DrawerContent, DrawerHeader, DrawerOverlay, Flex, Text, Image, Box, Button, Tooltip, Input } from '@chakra-ui/react';
+import { DeleteIcon, CheckIcon, CloseIcon, EditIcon } from '@chakra-ui/icons';
 
-const UserDetailsRightSlide = ({rightSlideIsOpen, setRightSlideIsOpen, userSelected, deleteUserHandler, isActiveHandler}) => {
+const UserDetailsRightSlide = ({rightSlideIsOpen, setRightSlideIsOpen, userSelected, deleteUserHandler, isActiveHandler, editUserHandler}) => {
+
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [firstname, setFirstname] = useState('');
+  const [lastname, setLastname] = useState('');
+  const [email, setEmail] = useState('');
   
   const actionHandler = (userId, actionType) => {
     
     if (actionType === 'delete') deleteUserHandler(userId);
     
     if (actionType === 'changeStatus') isActiveHandler(userId);
+
+    if (actionType === 'editUser') editUserHandler({ ...userSelected, first_name: firstname, last_name: lastname, email });
     
-    setRightSlideIsOpen(false)
+    onCloseHandler();
     
+  }
+
+  const getEditMode = () =>{
+    setFirstname(userSelected.first_name);
+    setLastname(userSelected.last_name);
+    setEmail(userSelected.email);
+    setIsEditMode(true);
+  }
+
+  const onCloseHandler = () => {
+    setRightSlideIsOpen(false);
+    setIsEditMode(false);
   }
   
   return (
     <Drawer
       isOpen={rightSlideIsOpen}
       placement="right"
-      onClose={() => setRightSlideIsOpen(false)}
+      onClose={() => onCloseHandler() }
     >
       <DrawerOverlay />
       <DrawerContent>
@@ -52,50 +71,76 @@ const UserDetailsRightSlide = ({rightSlideIsOpen, setRightSlideIsOpen, userSelec
               marginRight="-80px"
               w={4}
             />
+                {
+                  (!isEditMode)
+                  ? (
+                      <>
+                        <Text
+                          fontWeight="bold"
+                          marginBottom={1}
+                        >
+                          {`${userSelected.first_name} ${userSelected.last_name}`}
+                        </Text>
+                        <Text
+                          color="gray.500"
+                          fontWeight="medium"
+                        >
+                          {userSelected.email}
+                        </Text>
+              
+                      </>
+                  )
+                  : (
+                    <>
+                      <Input mb={1} id="first_name" type="text" value={firstname} onChange={(e) => setFirstname(e.target.value)} />
+                      <Input mb={1} id="last_name" type="text" value={lastname} onChange={(e) => setLastname(e.target.value)} />
+                      <Input mb={1} id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+                    </>
+                    
+                  )
+                }
 
-            <Text
-              fontWeight="bold"
-            >
-              {`${userSelected.first_name} ${userSelected.last_name}`}
-            </Text>
 
-            <Text
-              color="gray.500"
-              fontWeight="medium"
-              mb={2}
-            >
-              {userSelected.email}
-            </Text>
-            <Flex
-              gap={3}
-            >
-              <Tooltip label={(userSelected.isActive) ? 'Desactivar' : 'Activar'}>
-                <Button
-                  backgroundColor={(userSelected.isActive) ? 'red.400' : 'teal.300'}
-                  _hover={(userSelected.isActive) ? { backgroundColor: 'red.500' } : { backgroundColor: 'teal.400' }}
-                  color="white"
-                  onClick={() => actionHandler(userSelected.id, 'changeStatus')}
-                >
-                  {
-                    (userSelected.isActive)
-                    ? <CloseIcon />
-                    : <CheckIcon />
-                  }
-                </Button>
-              </Tooltip>
-              <Tooltip label="Eliminar" placement="bottom">
-                <Button
-                  bgColor="red.400"
-                  _hover={{ backgroundColor: 'red.500' }}
-                  color="white"
-                  onClick={() => actionHandler(userSelected.id, 'delete')}
-                >
-                  <DeleteIcon />
-                </Button>
-              </Tooltip>
-
-            </Flex>
-
+              <Flex
+                gap={3}
+                marginTop={3}
+              >
+                <Tooltip label={(userSelected.isActive) ? 'Desactivar' : 'Activar'}>
+                  <Button
+                    backgroundColor={(userSelected.isActive) ? 'red.400' : 'teal.300'}
+                    _hover={(userSelected.isActive) ? { backgroundColor: 'red.500' } : { backgroundColor: 'teal.400' }}
+                    color="white"
+                    onClick={() => actionHandler(userSelected.id, 'changeStatus')}
+                  >
+                    {
+                      (userSelected.isActive)
+                      ? <CloseIcon />
+                      : <CheckIcon />
+                    }
+                  </Button>
+                </Tooltip>
+                <Tooltip label="Eliminar" placement="bottom">
+                  <Button
+                    bgColor="red.400"
+                    _hover={{ backgroundColor: 'red.500' }}
+                    color="white"
+                    onClick={() => actionHandler(userSelected.id, 'delete')}
+                  >
+                    <DeleteIcon />
+                  </Button>
+                </Tooltip>
+                <Tooltip label={(isEditMode) ? 'Guardar' : 'Editar'}>
+                  <Button
+                    onClick={() => (!isEditMode) ? getEditMode() : actionHandler(undefined, 'editUser') }
+                  >
+                    {
+                      (isEditMode)
+                      ? <CheckIcon />
+                      : <EditIcon />
+                    }
+                  </Button>
+                </Tooltip>
+              </Flex>
           </Flex>
         </DrawerBody>
       </DrawerContent>

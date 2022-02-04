@@ -5,7 +5,10 @@ import UserNotFound from './UserNotFound';
 // Chakra UI
 import { Flex, List, ListItem, Text } from '@chakra-ui/react';
 
-const UsersList = ({users, deleteUserHandler, isActiveHandler, usersIsLoading, totalPages, page, setPage, totalResults, setRightSlideIsOpen, setUserSelected}) => {
+const UsersList = ({users, deleteUserHandler, isActiveHandler, usersIsLoading, setRightSlideIsOpen, setUserSelected, pagination, setPagination}) => {
+  
+  const { page, total, total_pages } = pagination;
+  
   return (
     <>
       {
@@ -18,7 +21,7 @@ const UsersList = ({users, deleteUserHandler, isActiveHandler, usersIsLoading, t
 
 
       {
-        totalPages > 0
+        total_pages > 0
         && (
           <Flex
             alignItems="center"
@@ -34,7 +37,7 @@ const UsersList = ({users, deleteUserHandler, isActiveHandler, usersIsLoading, t
             >
 
               {
-                [...Array(totalPages)].map((e, i) => (
+                [...Array(total_pages)].map((e, i) => (
                   <ListItem
                     key={i}
                     shadow="md"
@@ -42,14 +45,14 @@ const UsersList = ({users, deleteUserHandler, isActiveHandler, usersIsLoading, t
                     py={1}
                     px={2}
                     _hover={{cursor: 'pointer', backgroundColor: '#eee'}}
-                    onClick={() => setPage(i + 1)}
+                    onClick={() => setPagination((prev) => ({...prev, page: i + 1 }))}
                   >
                     {i + 1}
                   </ListItem>
                 ))
               }
             </List>
-            <Text fontWeight="bold">Total: {totalResults}</Text>
+            <Text fontWeight="bold">Total: {total}</Text>
 
           </Flex>
         )
